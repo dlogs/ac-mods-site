@@ -1,0 +1,8 @@
+[[kv_namespaces]]
+binding = "KV"
+id = "bfe0c0587d954441bd519e25c9101532"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "419_ac_mods"
+database_id = "bbe20274-c377-4d2a-9fe3-dc625261b666"

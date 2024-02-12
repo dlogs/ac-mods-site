@@ -1,0 +1,15 @@
+.dropFileContainer {
+  width: 200px;
+  border: 1px solid var(--color-bg-secondary);;
+  border-radius:  var(--border-radius);
+  padding: 1rem;
+  text-align: center;
+  > button {
+    padding: .5rem
+  }
+}
+
+
+.dropFileContainer__dragging {
+  border: dashed;
+}
