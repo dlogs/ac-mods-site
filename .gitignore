@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# cloudflare local stuff
+.wrangler
+migrations
+./cloudflare.d.ts

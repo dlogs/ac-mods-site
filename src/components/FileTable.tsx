@@ -35,7 +35,11 @@ function TableRow({ rowContent }: TableRowProps) {
   )
 }
 
-export default function FileTable(rowContents: UploadedContent[]) {
+export interface FileTableProps {
+  rowContents: UploadedContent[]
+}
+
+export default function FileTable({ rowContents }: FileTableProps) {
   return (
     <table>
       <thead>

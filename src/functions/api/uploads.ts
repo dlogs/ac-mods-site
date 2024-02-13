@@ -16,7 +16,7 @@ interface QueryResponse {
 const sql = `
 SELECT
   uploads.file_id,
-  uploads.category
+  uploads.category,
   uploads.name,
   uploads.ac_id,
   uploads.version,

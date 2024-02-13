@@ -49,6 +49,7 @@ export const uploadFile = async (uploadUrl: GetUploadUrlResponse, file: File): P
     headers: {
       Authorization: uploadUrl.authorizationToken,
       'Content-Type': 'b2/x-auto',
+      'X-Bz-File-Name': encodeURI(file.name),
       'X-Bz-Content-Sha1': sha1,
     },
   })

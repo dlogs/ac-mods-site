@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import styles from './Uploader.module.css'
-import { uploadMod } from '../services/upload'
+import { uploadMod } from '../services/mods'
 
 export default function Uploader() {
   const fileInput = useRef<HTMLInputElement>(null)
@@ -41,14 +41,18 @@ export default function Uploader() {
     <article id='uploader'>
       <h1>Uploader</h1>
       <label htmlFor='file'>Select File</label>
-      <div className={styles.dropFileContainer} onDragOver={(e) => e.preventDefault()} onDrop={handleFileDrop}>
-        {'Drag & Drop'}
-        <br />
-        {'or '}
-        <button type='button' onClick={() => fileInput.current?.click()}>
-          Browse
-        </button>
-      </div>
+      {!selectedFile ? (
+        <div className={styles.dropFileContainer} onDragOver={(e) => e.preventDefault()} onDrop={handleFileDrop}>
+          {'Drag & Drop'}
+          <br />
+          {'or '}
+          <button type='button' onClick={() => fileInput.current?.click()}>
+            Browse
+          </button>
+        </div>
+      ) : (
+        <input type='text' value={selectedFile?.name} readOnly />
+      )}
       <input type='file' name='file' hidden ref={fileInput} onChange={handleFileSelect} />
       <label htmlFor='category'>Category</label>
       <select name='category' ref={categoryInput}>
