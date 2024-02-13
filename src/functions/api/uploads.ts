@@ -1,5 +1,4 @@
 import UploadedContent from '../../types/UploadedContent'
-import { makePagesFunction } from 'vite-plugin-cloudflare-functions/worker'
 
 interface QueryResponse {
   file_id: string
@@ -28,13 +27,13 @@ FROM uploads
 LEFT JOIN users ON uploads.uploaded_by_id = users.id
 `
 
-export const onRequestGet = makePagesFunction(async ({ env }): Promise<UploadedContent[]> => {
+export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Response> => {
   const uploadQueryResult = await env.DB.prepare(sql).all<QueryResponse>()
 
   if (!uploadQueryResult.success) {
     throw new Error('Error fetching uploads')
   }
-  return uploadQueryResult.results.map((row) => ({
+  const rows: UploadedContent[] = uploadQueryResult.results.map((row) => ({
     fileId: row.file_id,
     category: row.category,
     name: row.name,
@@ -45,4 +44,5 @@ export const onRequestGet = makePagesFunction(async ({ env }): Promise<UploadedC
     url: row.download_url,
     size: 0,
   }))
-})
+  return new Response(JSON.stringify(rows))
+}

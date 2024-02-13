@@ -1,5 +1,3 @@
-import { makePagesFunction } from 'vite-plugin-cloudflare-functions/worker'
-
 export interface UploadModRequest {
   fileId: string
   category: string
@@ -22,7 +20,7 @@ INSERT INTO uploads (
 ) values (?, ?, ?, ?, ?, ?, ?)
 `
 
-export const onRequestPost = makePagesFunction(async ({ request, env }): Promise<void> => {
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }): Promise<Response> => {
   const body = (await request.json()) as UploadModRequest
   await env.DB.prepare(sql).bind(
     body.fileId,
@@ -34,4 +32,5 @@ export const onRequestPost = makePagesFunction(async ({ request, env }): Promise
     Date.now(),
     null,
   )
-})
+  return new Response()
+}

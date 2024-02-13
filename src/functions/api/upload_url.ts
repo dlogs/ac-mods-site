@@ -1,7 +1,6 @@
-import { makePagesFunction } from 'vite-plugin-cloudflare-functions/worker'
 import { getAuthResponse, getUploadUrl } from '../../services/backblaze'
 
-export const onRequestGet = makePagesFunction(async ({ env }) => {
+export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Response> => {
   const bucketId = await env.KV.get('bucket_id')
   const applicationKeyId = await env.KV.get('application_key_id')
   const applicationKey = await env.KV.get('application_key')
@@ -11,5 +10,6 @@ export const onRequestGet = makePagesFunction(async ({ env }) => {
 
   const authResponse = await getAuthResponse(applicationKeyId, applicationKey)
 
-  return getUploadUrl(authResponse, bucketId)
-})
+  const uploadUrl = await getUploadUrl(authResponse, bucketId)
+  return new Response(JSON.stringify(uploadUrl))
+}
