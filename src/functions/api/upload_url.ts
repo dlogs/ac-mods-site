@@ -1,3 +1,4 @@
+import { stringify } from 'superjson'
 import { getAuthResponse, getUploadUrl } from '../../services/backblaze'
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Response> => {
@@ -11,5 +12,5 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Respons
   const authResponse = await getAuthResponse(applicationKeyId, applicationKey)
 
   const uploadUrl = await getUploadUrl(authResponse, bucketId)
-  return new Response(JSON.stringify(uploadUrl))
+  return new Response(stringify(uploadUrl))
 }

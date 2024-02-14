@@ -1,3 +1,4 @@
+import { stringify } from 'superjson'
 import { UploadedContent } from '../../types/UploadedContent'
 import { z } from 'zod'
 
@@ -49,5 +50,5 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Respons
     url: row.download_url,
     size: 0,
   }))
-  return new Response(JSON.stringify(rows))
+  return new Response(stringify(rows))
 }
