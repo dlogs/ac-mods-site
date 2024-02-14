@@ -3,7 +3,11 @@ import { z } from 'zod'
 
 export const AuthResponse = z.object({
   authorizationToken: z.string(),
-  apiUrl: z.string(),
+  apiInfo: z.object({
+    storageApi: z.object({
+      apiUrl: z.string(),
+    }),
+  }),
 })
 
 export type AuthResponse = z.infer<typeof AuthResponse>
@@ -37,7 +41,9 @@ export const getAuthResponse = async (applicationKeyId: string, applicationKey: 
 
 export const getUploadUrl = async (authResponse: AuthResponse, bucketId: string): Promise<GetUploadUrlResponse> => {
   const urlResponse = await fetch(
-    authResponse.apiUrl + '/b2api/v3/b2_get_upload_url?' + new URLSearchParams({ bucketId }).toString(),
+    authResponse.apiInfo.storageApi.apiUrl +
+      '/b2api/v3/b2_get_upload_url?' +
+      new URLSearchParams({ bucketId }).toString(),
     {
       method: 'GET',
       headers: {
