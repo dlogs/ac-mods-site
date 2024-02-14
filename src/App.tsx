@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import FileTable from './components/FileTable'
 import Uploader from './components/Uploader'
-import UploadedContent from './types/UploadedContent'
+import { UploadedContent } from './types/UploadedContent'
 import { getUploadedMods } from './services/mods'
 
 function App() {

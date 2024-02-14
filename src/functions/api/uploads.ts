@@ -1,16 +1,19 @@
-import UploadedContent from '../../types/UploadedContent'
+import { UploadedContent } from '../../types/UploadedContent'
+import { z } from 'zod'
 
-interface QueryResponse {
-  file_id: string
-  category: string
-  name: string
-  ac_id: string
-  version: string
-  uploaded_at: number
-  download_url: string
-  uploaded_by_email: string | null
-  uploaded_by_display_name: string | null
-}
+export const QueryResponse = z.object({
+  file_id: z.string(),
+  category: z.string(),
+  name: z.string(),
+  ac_id: z.string(),
+  version: z.string(),
+  uploaded_at: z.number(),
+  download_url: z.string(),
+  uploaded_by_email: z.string().nullable(),
+  uploaded_by_display_name: z.string().nullable(),
+})
+
+export type QueryResponse = z.infer<typeof QueryResponse>
 
 const sql = `
 SELECT
@@ -28,12 +31,14 @@ LEFT JOIN users ON uploads.uploaded_by_id = users.id
 `
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Response> => {
-  const uploadQueryResult = await env.DB.prepare(sql).all<QueryResponse>()
+  const uploadQueryResult = await env.DB.prepare(sql).all()
 
   if (!uploadQueryResult.success) {
     throw new Error('Error fetching uploads')
   }
-  const rows: UploadedContent[] = uploadQueryResult.results.map((row) => ({
+
+  const parsedResults = z.array(QueryResponse).parse(uploadQueryResult.results)
+  const rows: UploadedContent[] = parsedResults.map((row) => ({
     fileId: row.file_id,
     category: row.category,
     name: row.name,

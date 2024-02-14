@@ -1,11 +1,16 @@
-export interface UploadModRequest {
-  fileId: string
-  category: string
-  name: string
-  acId: string
-  version: string
-  downloadUrl: string
-}
+import { z } from 'zod'
+import { parse } from 'superjson'
+
+export const UploadModRequest = z.object({
+  fileId: z.string(),
+  category: z.string(),
+  name: z.string(),
+  acId: z.string(),
+  version: z.string(),
+  downloadUrl: z.string(),
+})
+
+export type UploadModRequest = z.infer<typeof UploadModRequest>
 
 const sql = `
 INSERT INTO uploads (
@@ -21,7 +26,7 @@ INSERT INTO uploads (
 `
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }): Promise<Response> => {
-  const body = (await request.json()) as UploadModRequest
+  const body = UploadModRequest.parse(parse(await request.text()))
   await env.DB.prepare(sql).bind(
     body.fileId,
     body.category,

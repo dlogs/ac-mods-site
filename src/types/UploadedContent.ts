@@ -1,11 +1,15 @@
-export default interface UploadedContent {
-  fileId: string
-  category: string
-  name: string
-  acId: string
-  version: string
-  uploadedBy: string
-  uploadedAt: Date
-  url: string
-  size: number
-}
+import { z } from 'zod'
+
+export const UploadedContent = z.object({
+  fileId: z.string(),
+  category: z.string(),
+  name: z.string(),
+  acId: z.string(),
+  version: z.string(),
+  uploadedBy: z.string(),
+  uploadedAt: z.date(),
+  url: z.string(),
+  size: z.number(),
+})
+
+export type UploadedContent = z.infer<typeof UploadedContent>

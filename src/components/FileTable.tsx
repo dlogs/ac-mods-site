@@ -1,4 +1,4 @@
-import UploadedContent from '../types/UploadedContent'
+import { UploadedContent } from '../types/UploadedContent'
 import styles from './FileTable.module.css'
 
 interface TableRowProps {
