@@ -20,7 +20,8 @@ function TableRow({ rowContent }: TableRowProps) {
       <td>{rowContent.acId}</td>
       <td>{rowContent.version}</td>
       <td>
-        {rowContent.uploadedAt.toString()} by {rowContent.uploadedBy}
+        {rowContent.uploadedAt.toLocaleString()} by
+        {rowContent.uploadedBy}
       </td>
       <td>
         <div className={styles.rowButtonContainer}>
