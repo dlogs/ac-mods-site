@@ -24,7 +24,8 @@ function TableRow({ rowContent }: TableRowProps) {
       <td>{rowContent.acId}</td>
       <td>{rowContent.version}</td>
       <td>
-        {rowContent.uploadedAt.toLocaleString()} by
+        {rowContent.uploadedAt.toLocaleString()}
+        {' by '}
         {rowContent.uploadedBy}
       </td>
       <td>
