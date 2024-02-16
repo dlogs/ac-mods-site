@@ -12,7 +12,7 @@ function App() {
   }
 
   useEffect(() => {
-    refreshMods
+    refreshMods()
   }, [])
 
   return (
