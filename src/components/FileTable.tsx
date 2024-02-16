@@ -5,6 +5,8 @@ interface TableRowProps {
   rowContent: UploadedContent
 }
 
+const rootUrl = 'https://acfiles.419fragkings.win/file/419acmods/'
+
 function TableRow({ rowContent }: TableRowProps) {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -13,6 +15,8 @@ function TableRow({ rowContent }: TableRowProps) {
   const deleteRow = () => {
     alert('made you look')
   }
+
+  const downloadUrl = rootUrl + rowContent.fileName
 
   return (
     <tr>
@@ -25,8 +29,8 @@ function TableRow({ rowContent }: TableRowProps) {
       </td>
       <td>
         <div className={styles.rowButtonContainer}>
-          <button onClick={() => copyToClipboard(rowContent.url)}>Copy Link</button>
-          <a href={rowContent.url}>
+          <button onClick={() => copyToClipboard(downloadUrl)}>Copy Link</button>
+          <a href={downloadUrl}>
             <strong>Download</strong>
           </a>
           <button onClick={() => deleteRow()}>Delete</button>

@@ -9,7 +9,7 @@ export const QueryResponse = z.object({
   ac_id: z.string(),
   version: z.string(),
   uploaded_at: z.number(),
-  download_url: z.string(),
+  file_name: z.string(),
   uploaded_by_email: z.string().nullable(),
   uploaded_by_display_name: z.string().nullable(),
 })
@@ -23,7 +23,7 @@ SELECT
   uploads.name,
   uploads.ac_id,
   uploads.version,
-  uploads.download_url,
+  uploads.file_name,
   uploads.uploaded_at,
   users.email as uploaded_by_email,
   users.display_name as uploaded_by_display_name
@@ -38,7 +38,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Respons
     throw new Error('Error fetching uploads')
   }
 
-  const parsedResults = z.array(QueryResponse).parse(uploadQueryResult.results)
+  const parsedResults = QueryResponse.array().parse(uploadQueryResult.results)
   const rows: UploadedContent[] = parsedResults.map((row) => ({
     fileId: row.file_id,
     category: row.category,
@@ -47,7 +47,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }): Promise<Respons
     version: row.version,
     uploadedAt: new Date(row.uploaded_at),
     uploadedBy: row.uploaded_by_display_name || row.uploaded_by_email || 'Dave',
-    url: row.download_url,
+    fileName: row.file_name,
     size: 0,
   }))
   return new Response(stringify(rows))

@@ -8,7 +8,7 @@ export const UploadedContent = z.object({
   version: z.string(),
   uploadedBy: z.string(),
   uploadedAt: z.date(),
-  url: z.string(),
+  fileName: z.string(),
   size: z.number(),
 })
 

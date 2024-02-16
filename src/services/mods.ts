@@ -2,7 +2,7 @@ import axios from 'axios'
 import { UploadedContent } from '../types/UploadedContent'
 import { uploadFile, GetUploadUrlResponse } from './backblaze'
 import { parse, stringify } from 'superjson'
-import { z } from 'zod'
+import { UploadModRequest } from '../functions/api/upload'
 
 const client = axios.create({
   transformResponse: (data) => parse(data),
@@ -11,7 +11,7 @@ const client = axios.create({
 
 export const getUploadedMods = async (): Promise<UploadedContent[]> => {
   const uploadsResponse = await client.get('/api/uploads')
-  return z.array(UploadedContent).parse(uploadsResponse.data)
+  return UploadedContent.array().parse(uploadsResponse.data)
 }
 
 export const uploadMod = async (file: File, category: string, name: string, id: string, version: string) => {
@@ -24,6 +24,6 @@ export const uploadMod = async (file: File, category: string, name: string, id: 
     name,
     acId: id,
     version,
-    downloadUrl: uploadResult.fileName,
-  })
+    fileName: uploadResult.fileName,
+  } as UploadModRequest)
 }
