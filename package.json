@@ -35,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "glob": "^10.3.10",
     "jose": "^5.2.2",
+    "libarchive.js": "^2.0.2",
     "prettier": "^3.2.5",
     "superjson": "^2.2.1",
     "typescript": "^5.3.3",

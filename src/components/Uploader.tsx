@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import styles from './Uploader.module.css'
 import { uploadMod } from '../services/mods'
+import { findModInfo } from '../services/modParser'
 
 export interface UploadProps {
   refreshMods: () => void
@@ -13,13 +14,25 @@ export default function Uploader({ refreshMods }: UploadProps) {
   const idInput = useRef<HTMLInputElement>(null)
   const versionInput = useRef<HTMLInputElement>(null)
   const [selectedFile, setSelectedFile] = useState<File>()
-  const [status, setStatus] = useState<string>('')
+  const [fileParseStatus, setFileParseStatus] = useState<string | null>(null)
+  const [uploadStatus, setUploadStatus] = useState<string>('')
+
+  const selectFile = async (file: File) => {
+    console.log(file)
+    setSelectedFile(file)
+    setFileParseStatus('Parsing values from file...')
+    const modInfo = await findModInfo(file)
+    categoryInput.current!.value = modInfo.category
+    nameInput.current!.value = modInfo.name
+    idInput.current!.value = modInfo.id
+    versionInput.current!.value = modInfo.version
+    setFileParseStatus(null)
+  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0]
-      console.log(file)
-      setSelectedFile(file)
+      selectFile(file)
     }
   }
 
@@ -27,13 +40,17 @@ export default function Uploader({ refreshMods }: UploadProps) {
     e.preventDefault()
     if (e.dataTransfer.files) {
       const file = e.dataTransfer.files[0]
-      console.log(file)
-      setSelectedFile(file)
+      selectFile(file)
     }
   }
 
   const handleUploadClicked = async () => {
-    setStatus('Uploading...')
+    if (categoryInput.current!.value === '') {
+      alert('Please select a category')
+      return
+    }
+
+    setUploadStatus('Uploading...')
     try {
       await uploadMod(
         selectedFile!,
@@ -42,10 +59,10 @@ export default function Uploader({ refreshMods }: UploadProps) {
         idInput.current!.value,
         versionInput.current!.value,
       )
-      setStatus('Upload successful')
+      setUploadStatus('Upload successful')
       refreshMods()
     } catch (error) {
-      setStatus('Upload failed')
+      setUploadStatus('Upload failed')
     }
   }
 
@@ -66,8 +83,10 @@ export default function Uploader({ refreshMods }: UploadProps) {
         <input type='text' value={selectedFile?.name} readOnly />
       )}
       <input type='file' name='file' hidden ref={fileInput} onChange={handleFileSelect} />
+      {fileParseStatus && <div>{fileParseStatus}</div>}
       <label htmlFor='category'>Category</label>
       <select name='category' ref={categoryInput}>
+        <option value=''>Unknown</option>
         <option value='Track'>Track</option>
         <option value='Car'>Car</option>
       </select>
@@ -80,7 +99,7 @@ export default function Uploader({ refreshMods }: UploadProps) {
       <button type='button' onClick={handleUploadClicked}>
         Upload
       </button>
-      <div>{status}</div>
+      <div>{uploadStatus}</div>
     </article>
   )
 }
