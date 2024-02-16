@@ -1,7 +1,8 @@
 .rowButtonContainer {
   display: flex;
   gap: 10px;
-  button, & a {
-    padding: .5rem
+
+  button, a {
+    padding: .5rem;
   }
 }
