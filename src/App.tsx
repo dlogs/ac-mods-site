@@ -7,8 +7,12 @@ import { getUploadedMods } from './services/mods'
 
 function App() {
   const [uploadedMods, setUploadedMods] = useState<UploadedContent[]>([])
-  useEffect(() => {
+  const refreshMods = () => {
     getUploadedMods().then(setUploadedMods)
+  }
+
+  useEffect(() => {
+    refreshMods
   }, [])
 
   return (
@@ -21,7 +25,7 @@ function App() {
         <h1>Tracks</h1>
         <FileTable rowContents={uploadedMods.filter((mod) => mod.category === 'Track')} />
       </article>
-      <Uploader />
+      <Uploader refreshMods={refreshMods} />
     </main>
   )
 }

@@ -2,13 +2,18 @@ import { useRef, useState } from 'react'
 import styles from './Uploader.module.css'
 import { uploadMod } from '../services/mods'
 
-export default function Uploader() {
+export interface UploadProps {
+  refreshMods: () => void
+}
+
+export default function Uploader({ refreshMods }: UploadProps) {
   const fileInput = useRef<HTMLInputElement>(null)
   const categoryInput = useRef<HTMLSelectElement>(null)
   const nameInput = useRef<HTMLInputElement>(null)
   const idInput = useRef<HTMLInputElement>(null)
   const versionInput = useRef<HTMLInputElement>(null)
   const [selectedFile, setSelectedFile] = useState<File>()
+  const [status, setStatus] = useState<string>('')
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -28,13 +33,20 @@ export default function Uploader() {
   }
 
   const handleUploadClicked = async () => {
-    uploadMod(
-      selectedFile!,
-      categoryInput.current!.value,
-      nameInput.current!.value,
-      idInput.current!.value,
-      versionInput.current!.value,
-    )
+    setStatus('Uploading...')
+    try {
+      await uploadMod(
+        selectedFile!,
+        categoryInput.current!.value,
+        nameInput.current!.value,
+        idInput.current!.value,
+        versionInput.current!.value,
+      )
+      setStatus('Upload successful')
+      refreshMods()
+    } catch (error) {
+      setStatus('Upload failed')
+    }
   }
 
   return (
@@ -68,6 +80,7 @@ export default function Uploader() {
       <button type='button' onClick={handleUploadClicked}>
         Upload
       </button>
+      <div>{status}</div>
     </article>
   )
 }
