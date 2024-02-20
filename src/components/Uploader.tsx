@@ -60,10 +60,11 @@ export default function Uploader({ refreshMods }: UploadProps) {
         versionInput.current!.value,
       )
       setUploadStatus('Upload successful')
-      refreshMods()
     } catch (error) {
+      console.error(error)
       setUploadStatus('Upload failed')
     }
+    refreshMods()
   }
 
   return (
