@@ -25,7 +25,6 @@ export const findModInfo = async (file: File): Promise<ModInfo> => {
   const archive = await Archive.open(file)
   const entries = (await archive.getFilesArray()) as FileArrayEntry[]
   const filePaths = entries.map((entry: FileArrayEntry) => entry.file._path)
-
   const carUiPath = filePaths.find((path: string) => path.endsWith('ui_car.json'))
   if (carUiPath) {
     const uiFile = await archive.extractSingleFile(carUiPath)

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { parse } from 'superjson'
+import { parse, stringify } from 'superjson'
 import { TokenUser, getUser } from '../../services/auth'
 
 export const UploadModRequest = z.object({
@@ -34,17 +34,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }): Promi
   await env.DB.prepare(insertUploadsSql)
     .bind(body.fileId, body.category, body.name, body.acId, body.version, body.fileName, Date.now(), tokenUser.sub)
     .run()
-  return new Response()
+  return new Response(stringify({}))
 }
 
 const insertUserIfNeeded = async (db: D1Database, user: TokenUser): Promise<void> => {
-  await db.prepare(insertUserSql).bind(user.sub, user.email, Date.now()).run()
+  await db.prepare(insertUserSql).bind(user.sub, user.email, user.email.replace(/@.+/, ''), Date.now()).run()
 }
 
 const insertUserSql = `
 INSERT OR IGNORE INTO users (
   id,
   email,
+  display_name,
   created_at
-) values (?, ?, ?)
+) values (?, ?, ?, ?)
 `

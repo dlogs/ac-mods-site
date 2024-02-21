@@ -13,7 +13,7 @@ export default function Uploader({ refreshMods }: UploadProps) {
   const nameInput = useRef<HTMLInputElement>(null)
   const idInput = useRef<HTMLInputElement>(null)
   const versionInput = useRef<HTMLInputElement>(null)
-  const [selectedFile, setSelectedFile] = useState<File>()
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [fileParseStatus, setFileParseStatus] = useState<string | null>(null)
   const [uploadStatus, setUploadStatus] = useState<string>('')
 
@@ -27,6 +27,14 @@ export default function Uploader({ refreshMods }: UploadProps) {
     idInput.current!.value = modInfo.id
     versionInput.current!.value = modInfo.version
     setFileParseStatus(null)
+  }
+
+  const clearInputs = () => {
+    setSelectedFile(null)
+    categoryInput.current!.value = ''
+    nameInput.current!.value = ''
+    idInput.current!.value = ''
+    versionInput.current!.value = ''
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +53,24 @@ export default function Uploader({ refreshMods }: UploadProps) {
   }
 
   const handleUploadClicked = async () => {
+    if (!selectedFile) {
+      alert('Please select a file')
+      return
+    }
     if (categoryInput.current!.value === '') {
       alert('Please select a category')
+      return
+    }
+    if (nameInput.current!.value === '') {
+      alert('Please select a name')
+      return
+    }
+    if (idInput.current!.value === '') {
+      alert('Please select an ID')
+      return
+    }
+    if (versionInput.current!.value === '') {
+      alert('Please select a version')
       return
     }
 
@@ -64,6 +88,7 @@ export default function Uploader({ refreshMods }: UploadProps) {
       console.error(error)
       setUploadStatus('Upload failed')
     }
+    clearInputs()
     refreshMods()
   }
 
@@ -81,7 +106,12 @@ export default function Uploader({ refreshMods }: UploadProps) {
           </button>
         </div>
       ) : (
-        <input type='text' value={selectedFile?.name} readOnly />
+        <>
+          <input type='text' value={selectedFile?.name} readOnly />
+          <button type='button' onClick={() => setSelectedFile(null)}>
+            Clear File
+          </button>
+        </>
       )}
       <input type='file' name='file' hidden ref={fileInput} onChange={handleFileSelect} />
       {fileParseStatus && <div>{fileParseStatus}</div>}
