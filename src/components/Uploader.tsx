@@ -69,10 +69,6 @@ export default function Uploader({ refreshMods }: UploadProps) {
       alert('Please select an ID')
       return
     }
-    if (versionInput.current!.value === '') {
-      alert('Please select a version')
-      return
-    }
 
     setUploadStatus('Uploading...')
     try {
